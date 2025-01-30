@@ -15,13 +15,13 @@ router.post('/logout', auth, authController.logout);
 router.get('/refreshJWT', authController.refresh);
 
 //get all categories
-router.get('/get-all-categories', categoryController.getAllCategories);
+router.get('/get-all-categories',  categoryController.getAllCategories);
 //create category
-router.post('/create-Category', categoryController.createCategory);
+router.post('/create-Category', auth, categoryController.createCategory);
 //update category
-router.put('/update-category', categoryController.updateCategory);
+router.put('/update-category', auth, categoryController.updateCategory);
 //delete category
-router.delete('/delete-category', categoryController.deleteCategory);
+router.delete('/delete-category', auth, categoryController.deleteCategory);
 
 
 /*
