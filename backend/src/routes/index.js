@@ -3,6 +3,7 @@ export const router = express.Router();
 import { auth } from '../middlewares/auth.js';
 
 import { authController } from '../controllers/authController.js';
+import { categoryController } from '../controllers/categoryController.js';
 
 //signup
 router.post('/register', authController.register);
@@ -12,6 +13,15 @@ router.post('/login', authController.login);
 router.post('/logout', auth, authController.logout);
 // refresh JWT
 router.get('/refreshJWT', authController.refresh);
+
+//get all categories
+router.get('/get-all-categories', categoryController.getAllCategories);
+//create category
+router.post('/create-Category', categoryController.createCategory);
+//update category
+router.put('/update-category', categoryController.updateCategory);
+//delete category
+router.delete('/delete-category', categoryController.deleteCategory);
 
 
 /*
