@@ -1,48 +1,99 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
+// Create transporter with necessary configurations
 const transporter = nodemailer.createTransport({
-	service: 'gmail',
-	auth: {
-		user: process.env.EMAIL_USER,
-		pass: process.env.EMAIL_PASS,
-	},
-	port: process.env.EMAIL_PORT || 587, // Default port for SMTP
+  host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT,
+  secure: false, // Use TLS
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false,
+  },
+  connectionTimeout: 10000, // 10 seconds
+  greetingTimeout: 5000, // 5 seconds
+  socketTimeout: 10000, // 10 seconds
 });
 
-/**
- * Sends a welcome email to the specified user with their password.
- *
- * This function uses the nodemailer library to send an email with
- * the subject "Welcome to Car Management System" and includes the
- * user's password in the email body. The email is sent from the
- * address specified in the environment variables.
- *
- * @param {string} userEmail - The email address of the recipient.
- * @param {string} password - The password to include in the email body.
- * @returns {Promise<Object>} - A promise that resolves to the email
- * information object if the email is sent successfully.
- * @throws {Object} - An error object with status 550 and a message
- * if there is an issue sending the email.
- */
-
-export const sendMail = async (userEmail, password) => {
-	try {
-		const mailOptions = {
-			from: `"Car Management System" <${process.env.EMAIL_USER}>`,
-			to: userEmail,
-			subject: 'Welcome to Car Management System',
-			text: `Hello,\n\nWelcome to the Car Management System!\n\nYour password is: ${password}.\n\nBest regards,\nThe Car Management System Team`,
-		};
-
-		// Send the email
-		const info = await transporter.sendMail(mailOptions);
-    
-		return info; // Optional, return the email info
-	} catch (error) {
-		// Handle email errors
-		throw {
-			status: 550,
-			message: error.message,
-		};
-	}
+// Gracefully verify the transporter on startup
+const verifyTransporter = () => {
+  return new Promise((resolve, reject) => {
+    transporter.verify((error, success) => {
+      if (error) {
+        console.error("SMTP Error during startup:", error);
+        reject(error);
+      } else {
+        console.log("SMTP Server is ready to take messages.");
+        resolve(success);
+      }
+    });
+  });
 };
+
+// Gracefully close the transporter when shutting down
+const closeTransporter = () => {
+  return new Promise((resolve) => {
+    transporter.close(); // Close the SMTP connection
+    console.log("SMTP connection closed.");
+    resolve();
+  });
+};
+
+// Send email function
+export const sendMail = async (userEmail, password) => {
+  try {
+    const mailOptions = {
+      from: `"Car Management System" <${process.env.EMAIL_USER}>`,
+      to: userEmail,
+      subject: "Welcome to Car Management System",
+      text: `Hello,\n\nWelcome to the Car Management System!\n\nYour password is: ${password}.\n\nBest regards,\nThe Car Management System Team`,
+    };
+
+    // Send the email
+    const info = await transporter.sendMail(mailOptions);
+
+    console.log("Email sent successfully:", info.messageId);
+    return info;
+  } catch (error) {
+    console.error("Email sending error:", error);
+    throw {
+      status: 550,
+      message: error.message,
+    };
+  }
+};
+
+// Test email service
+// const testEmailService = async () => {
+//   try {
+//     await sendMail("test@example.com", "testpassword");
+//     console.log("Test email sent successfully");
+//   } catch (error) {
+//     console.error("Test email failed:", error);
+//   }
+// };
+
+// // Test startup
+// verifyTransporter()
+//   .then(() => {
+//     testEmailService(); // Test email after verifying the transporter
+//   })
+//   .catch((error) => {
+//     console.error("SMTP Error during startup:", error);
+//     process.exit(1); // Exit with failure if SMTP verification fails
+//   });
+
+// Graceful shutdown handling
+process.on('SIGINT', async () => {
+  console.log("Shutting down gracefully...");
+  await closeTransporter(); // Ensure transporter is closed before shutdown
+  process.exit(0); // Exit successfully after cleanup
+});
+
+process.on('SIGTERM', async () => {
+  console.log("Shutting down gracefully...");
+  await closeTransporter();
+  process.exit(0);
+});

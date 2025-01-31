@@ -1,9 +1,11 @@
 import express from 'express';
 export const router = express.Router();
-import { auth } from '../middlewares/auth.js';
+import { auth, checkOwnership } from '../middlewares/auth.js';
 
 import { authController } from '../controllers/authController.js';
 import { categoryController } from '../controllers/categoryController.js';
+import { carController } from '../controllers/carController.js';
+import { upload } from '../utils/multer.js';
 
 //signup
 router.post('/register', authController.register);
@@ -17,12 +19,23 @@ router.get('/refreshJWT', authController.refresh);
 //get all categories
 router.get('/get-all-categories',  categoryController.getAllCategories);
 //create category
-router.post('/create-Category', auth, categoryController.createCategory);
+router.post('/admin/create-category', auth, categoryController.createCategory);
 //update category
-router.put('/update-category', auth, categoryController.updateCategory);
+router.put('/admin/update-category', auth, categoryController.updateCategory);
 //delete category
-router.delete('/delete-category', auth, categoryController.deleteCategory);
+router.delete('/admin/delete-category/:id', auth, categoryController.deleteCategory);
 
+
+//create car
+router.post('/create-car', auth, upload.single('image'), carController.createCar);
+//get all cars
+router.get('/get-all-cars', carController.getCars);
+//get car by ID
+router.get('/get-car/:id', carController.getCar);
+//update car
+router.put('/update-car', auth, upload.fields([{ name: 'image', maxCount: 1 }]), checkOwnership, carController.updateCar);
+//delete car
+router.delete('/delete-car/:id', auth, checkOwnership, carController.deleteCar);
 
 /*
 
