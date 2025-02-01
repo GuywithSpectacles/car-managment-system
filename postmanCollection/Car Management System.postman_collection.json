@@ -1,0 +1,409 @@
+{
+	"info": {
+		"_postman_id": "2c25ceec-9002-4731-b4c1-84182f87f271",
+		"name": "Car Management System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30095203",
+		"_collection_link": "https://noman0.postman.co/workspace/Noman-Workspace~d63ce3f2-c8a6-4834-bba5-f1ea828c3f2b/collection/30095203-2c25ceec-9002-4731-b4c1-84182f87f271?action=share&source=collection_link&creator=30095203"
+	},
+	"item": [
+		{
+			"name": "Authenticate",
+			"item": [
+				{
+					"name": "sign-up",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\" : \"Adeel Ahmad\",\n    \"email\" : \"adeel2097@hotmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8500/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8500",
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "log-in",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"aqeel4622@outlook.com\",\n    \"password\" : \"r7YKG8dn3B\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8500/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8500",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "log-out",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8500/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8500",
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8500/refreshJWT",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8500",
+							"path": [
+								"refreshJWT"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "create category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\" : \"Off-Road\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8500/admin/create-category",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8500",
+							"path": [
+								"admin",
+								"create-category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8500/get-all-categories",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8500",
+							"path": [
+								"get-all-categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update category",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"categoryId\": \"679aef8d3129cffad9d8b126\",\n    \"name\" : \"Hatchback\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8500/admin/update-category",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8500",
+							"path": [
+								"admin",
+								"update-category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8500/admin/delete-category/679b6153b608bd4c7e51de2a",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8500",
+							"path": [
+								"admin",
+								"delete-category",
+								"679b6153b608bd4c7e51de2a"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cars",
+			"item": [
+				{
+					"name": "create car",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/home/guywspecs/Pictures/car management system/Crystal-Black-2022-Honda-Civic-2.jpg"
+								},
+								{
+									"key": "categoryId",
+									"value": "679b2492bd8d8e024de8c21e",
+									"type": "text"
+								},
+								{
+									"key": "model",
+									"value": "Civic",
+									"type": "text"
+								},
+								{
+									"key": "make",
+									"value": "Honda",
+									"type": "text"
+								},
+								{
+									"key": "year",
+									"value": "2023",
+									"type": "text"
+								},
+								{
+									"key": "color",
+									"value": "Gun Metalic",
+									"type": "text"
+								},
+								{
+									"key": "registrationNo",
+									"value": "XYZ-123",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "A well-maintained sedan with excellent mileage.",
+									"type": "text"
+								},
+								{
+									"key": "ownerId",
+									"value": "6799f1c698698d5e30b3220f",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8500/create-car",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8500",
+							"path": [
+								"create-car"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get car by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8500/get-car/679dc0649afe0cf4ef3bdacc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8500",
+							"path": [
+								"get-car",
+								"679dc0649afe0cf4ef3bdacc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update car",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/home/guywspecs/Pictures/car management system/Crystal-Black-2022-Honda-Civic-2.jpg",
+									"disabled": true
+								},
+								{
+									"key": "carId",
+									"value": "679c7901690aed0e89ac974a",
+									"type": "text"
+								},
+								{
+									"key": "categoryId",
+									"value": "679aef7a3129cffad9d8b123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8500/update-car",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8500",
+							"path": [
+								"update-car"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete car",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8500/delete-car/679c535076b0a72d86a76a1d",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8500",
+							"path": [
+								"delete-car",
+								"679c535076b0a72d86a76a1d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all cars",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8500/get-all-cars?page=1&limit=10&sortBy=createdAt:desc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8500",
+							"path": [
+								"get-all-cars"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "sortBy",
+									"value": "createdAt:desc"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
