@@ -17,29 +17,39 @@ export const carController = {
   // @access  Public
   async getCars(req, res, next) {
     try {
-      const options = {
-        page: req.query.page,
-        limit: req.query.limit,
-        sort: {},
-      };
+        const options = {
+            page: parseInt(req.query.page) || 1,
+            limit: parseInt(req.query.limit) || 10,
+            sort: {},
+        };
 
-      if (req.query.sortBy) {
-        const parts = req.query.sortBy.split(":");
-        options.sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
-      }
+        if (req.query.sortBy) {
+            const parts = req.query.sortBy.split(":");
+            options.sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
+        }
 
-      const result = await paginationService.paginate({}, options);
+        // Fetch cars with populated category field
+        const result = await paginationService.paginate({}, options);
 
-      const carDTO = result.data.map((car) => new CarDTO(car));
+        // Populate the category field with only the "name" field
+        const populatedCars = await Car.find({ _id: { $in: result.data.map(car => car._id) } })
+            .populate("category", "name");
 
-      res.status(200).json({
-        total: result.total,
-        cars: carDTO,
-      });
+        // Transform response to replace category ID with category name
+        const carDTO = populatedCars.map((car) => new CarDTO({
+            ...car.toObject(), // Convert Mongoose object to plain JSON
+            category: car.category?.name || "Unknown", // Replace category ID with category name
+        }));
+
+        res.status(200).json({
+            total: result.total,
+            cars: carDTO,
+        });
     } catch (error) {
-      return next(error);
+        return next(error);
     }
-  },
+},
+
 
   // @desc    Get single car
   // @route   GET /api/cars/:id

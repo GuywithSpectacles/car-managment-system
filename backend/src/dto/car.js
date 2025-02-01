@@ -9,7 +9,6 @@ export class CarDTO {
 		this.image = car.image,
 		this.registrationNo = car.registrationNo
         this.description = car.description
-        this.owner = car.owner
 	}
 }
 

@@ -42,7 +42,7 @@ const closeTransporter = () => {
 };
 
 // Send email function
-export const sendMail = async (userEmail, password) => {
+export const sendMail = async (userEmail, password, next) => {
   try {
     const mailOptions = {
       from: `"Car Management System" <${process.env.EMAIL_USER}>`,
@@ -58,10 +58,7 @@ export const sendMail = async (userEmail, password) => {
     return info;
   } catch (error) {
     console.error("Email sending error:", error);
-    throw {
-      status: 550,
-      message: error.message,
-    };
+    return next(error)
   }
 };
 

@@ -17,21 +17,21 @@ router.post('/logout', auth, authController.logout);
 router.get('/refreshJWT', authController.refresh);
 
 //get all categories
-router.get('/get-all-categories',  categoryController.getAllCategories);
+router.get('/get-all-categories',  auth, categoryController.getAllCategories);
 //create category
-router.post('/admin/create-category', auth, categoryController.createCategory);
+router.post('/create-category', auth, categoryController.createCategory);
 //update category
-router.put('/admin/update-category', auth, categoryController.updateCategory);
+router.put('/update-category', auth, categoryController.updateCategory);
 //delete category
-router.delete('/admin/delete-category/:id', auth, categoryController.deleteCategory);
+router.delete('/delete-category/:id', auth, categoryController.deleteCategory);
 
 
 //create car
 router.post('/create-car', auth, upload.single('image'), carController.createCar);
 //get all cars
-router.get('/get-all-cars', carController.getCars);
+router.get('/get-all-cars', auth,carController.getCars);
 //get car by ID
-router.get('/get-car/:id', carController.getCar);
+router.get('/get-car/:id', auth, carController.getCar);
 //update car
 router.put('/update-car', auth, upload.fields([{ name: 'image', maxCount: 1 }]), checkOwnership, carController.updateCar);
 //delete car
