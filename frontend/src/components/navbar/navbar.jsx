@@ -11,42 +11,36 @@ function Navbar() {
 
   const handleSignOut = async () => {
     try {
-      await signout()
+      await signout();
       dispatch(resetUser());
+    } catch (err) {
+      return err;
     }
-    catch(err){
-      return (err);
-    }
-  }
+  };
   return (
     <>
       <nav className={styles.navbar}>
-        <NavLink to={"/"} className={`${styles.logo} ${styles.inActiveStyle}`}>
-          CarManagementSystem
-        </NavLink>
-
-        <NavLink
-          to={"/"}
-          className={({ isActive }) =>
-            isActive ? styles.activeStyle : styles.inActiveStyle
-          }
-        >
-          Dashboard
-        </NavLink>
-
-        <NavLink
-          to={"cars"}
-          className={({ isActive }) =>
-            isActive ? styles.activeStyle : styles.inActiveStyle
-          }
-        >
-          Cars
-        </NavLink>
-
         {isAuthenticated ? (
           <div>
+            <NavLink
+              to={"/"}
+              className={`${styles.logo} ${styles.inActiveStyle}`}
+            >
+              Car Management System
+            </NavLink>
+
+            <NavLink
+              to={"/"}
+              className={({ isActive }) =>
+                isActive ? styles.activeStyle : styles.inActiveStyle
+              }
+            >
+              Dashboard
+            </NavLink>
             <NavLink>
-              <button className={styles.signOutButton} onClick={handleSignOut}>Sign Out</button>
+              <button className={styles.signOutButton} onClick={handleSignOut}>
+                Sign Out
+              </button>
             </NavLink>
           </div>
         ) : (
@@ -55,7 +49,7 @@ function Navbar() {
               to={"login"}
               className={({ isActive }) =>
                 isActive ? styles.activeStyle : styles.inActiveStyle
-              } 
+              }
             >
               <button className={styles.logInButton}>Log In</button>
             </NavLink>

@@ -1,13 +1,18 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/navbar/navbar";
 import Footer from "./components/footer/footer";
-import Home from "./pages/home/home";
+import Dashboard from "./pages/dashboard/dashboard";
 import styles from "./App.module.css";
 import Protected from "./components/protected/protected";
 import Error from "./pages/error/error";
 import Login from "./pages/login/login";
 import { useSelector } from "react-redux";
 import Signup from "./pages/signup/signup";
+
+import "bootstrap/dist/css/bootstrap.min.css";
+import "datatables.net-dt/css/dataTables.dataTables.min.css";
+
+
 
 function App() {
   const isAuth = useSelector((state) => state.user.auth);
@@ -23,43 +28,8 @@ function App() {
               exact
               element={
                 <div className={styles.main}>
-                  <Home />
+                  <Dashboard />
                 </div>
-              }
-            />
-
-            <Route
-              path="crypto"
-              exact
-              element={
-                <div className={styles.main}>
-                  <h1>Crypto Page</h1>
-                </div>
-              }
-            />
-
-            <Route
-              path="blogs"
-              exact
-              element={
-                <Protected isAuth={isAuth}>
-                  <div className={styles.main}>
-                  <h1>Blog Page</h1>
-                </div>
-                </Protected>
-                
-              }
-            />
-
-            <Route
-              path="submit"
-              exact
-              element={
-                <Protected isAuth={isAuth}>
-                <div className={styles.main}>
-                  <h1>Blog Page</h1>
-                </div>
-                </Protected>
               }
             />
 
