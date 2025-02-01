@@ -58,23 +58,23 @@ export const auth = async (req, res, next) => {
 	next();
 }
 
-export const checkOwnership = async (req, res, next) => {
-	let car;
+// export const checkOwnership = async (req, res, next) => {
+// 	let car;
 
-	if(req.body.carId) {
-	  car = await Car.findById(req.body.carId);
-	}
-	else if(req.params.id) {
-	  car = await Car.findById(req.params.id);
-	}
+// 	if(req.body.carId) {
+// 	  car = await Car.findById(req.body.carId);
+// 	}
+// 	else if(req.params.id) {
+// 	  car = await Car.findById(req.params.id);
+// 	}
 	
-	if (!car) {
-	  return res.status(404).json({ message: "Car not found" })
-	}
+// 	if (!car) {
+// 	  return res.status(404).json({ message: "Car not found" })
+// 	}
   
-	if (car.owner.toString() !== req.user._id.toString()) {
-	  return res.status(403).json({ message: "Not authorized to perform this action" })
-	}
+// 	if (car.owner.toString() !== req.user._id.toString()) {
+// 	  return res.status(403).json({ message: "Not authorized to perform this action" })
+// 	}
   
-	next()
-  }
+// 	next()
+//   }

@@ -1,6 +1,6 @@
 import express from 'express';
 export const router = express.Router();
-import { auth, checkOwnership } from '../middlewares/auth.js';
+import { auth } from '../middlewares/auth.js';
 
 import { authController } from '../controllers/authController.js';
 import { categoryController } from '../controllers/categoryController.js';
@@ -33,9 +33,9 @@ router.get('/get-all-cars', auth,carController.getCars);
 //get car by ID
 router.get('/get-car/:id', auth, carController.getCar);
 //update car
-router.put('/update-car', auth, upload.fields([{ name: 'image', maxCount: 1 }]), checkOwnership, carController.updateCar);
+router.put('/update-car', auth, upload.fields([{ name: 'image', maxCount: 1 }]), carController.updateCar);
 //delete car
-router.delete('/delete-car/:id', auth, checkOwnership, carController.deleteCar);
+router.delete('/delete-car/:id', auth, carController.deleteCar);
 
 /*
 
