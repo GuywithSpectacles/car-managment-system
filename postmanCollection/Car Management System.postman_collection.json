@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "2c25ceec-9002-4731-b4c1-84182f87f271",
+		"_postman_id": "737ad2a3-41a3-4b9b-83ef-6a5e2a678197",
 		"name": "Car Management System",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "30095203",
-		"_collection_link": "https://noman0.postman.co/workspace/Noman-Workspace~d63ce3f2-c8a6-4834-bba5-f1ea828c3f2b/collection/30095203-2c25ceec-9002-4731-b4c1-84182f87f271?action=share&source=collection_link&creator=30095203"
+		"_collection_link": "https://www.postman.com/noman0/workspace/my-public-workspace/collection/30095203-737ad2a3-41a3-4b9b-83ef-6a5e2a678197?action=share&source=collection_link&creator=30095203"
 	},
 	"item": [
 		{
@@ -17,7 +17,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\" : \"Adeel Ahmad\",\n    \"email\" : \"adeel2097@hotmail.com\"\n}",
+							"raw": "{\n    \"name\" : \"Aqeel\",\n    \"email\" : \"aqeel4622@outlook.com\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
