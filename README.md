@@ -38,10 +38,6 @@ This is a MERN stack application for managing cars and categories, featuring aut
     #### Cars
     - `GET /api/cars`: Fetch all cars with pagination.
     - `POST /api/cars`: Add a new car.
-
-  ## Role-Based Access Control (RBAC)
-    - **Admin**: Can create, update, delete, and list categories and cars.
-    - **User**: Can view categories and cars but cannot create, update, or delete them.
     
   ### Default Roles
     - Users registered through the system are assigned the "user" role.
