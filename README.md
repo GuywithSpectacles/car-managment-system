@@ -38,10 +38,6 @@ This is a MERN stack application for managing cars and categories, featuring aut
     #### Cars
     - `GET /api/cars`: Fetch all cars with pagination.
     - `POST /api/cars`: Add a new car.
-    
-  ### Default Roles
-    - Users registered through the system are assigned the "user" role.
-    - Admins must be manually promoted using a database script or via admin setup.
 
 
 
