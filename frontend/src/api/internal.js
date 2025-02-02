@@ -47,7 +47,9 @@ export const getCategories = async () => {
     try {
         response = await api.get("/get-all-categories");
         
+        
     } catch (err) {
+        
         return err;
     }
     return response;
