@@ -48,10 +48,8 @@ app.use(cookieParser())
 app.use(express.json())
 
 const storagePath = path.join(__dirname, "..", "storage")
-console.log("Storage path:", storagePath)
 
 app.use("/storage", (req, res, next) => {
-  console.log("Requesting file:", req.url)
   next()
 })
 

@@ -9,7 +9,7 @@ export class CarDetailsDTO {
         this.year = carDetail.year
         this.description = carDetail.description
 		this.createdAt = carDetail.createdAt
-		this.categoryName = carDetail.category.name
+		this.categoryId = carDetail.category._id
 		this.ownerName = carDetail.owner.name
 	}
 }

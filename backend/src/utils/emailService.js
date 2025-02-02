@@ -25,7 +25,6 @@ const verifyTransporter = () => {
         console.error("SMTP Error during startup:", error);
         reject(error);
       } else {
-        console.log("SMTP Server is ready to take messages.");
         resolve(success);
       }
     });
@@ -36,7 +35,6 @@ const verifyTransporter = () => {
 const closeTransporter = () => {
   return new Promise((resolve) => {
     transporter.close(); // Close the SMTP connection
-    console.log("SMTP connection closed.");
     resolve();
   });
 };
@@ -53,8 +51,6 @@ export const sendMail = async (userEmail, password, next) => {
 
     // Send the email
     const info = await transporter.sendMail(mailOptions);
-
-    console.log("Email sent successfully:", info.messageId);
     return info;
   } catch (error) {
     console.error("Email sending error:", error);
@@ -84,13 +80,11 @@ export const sendMail = async (userEmail, password, next) => {
 
 // Graceful shutdown handling
 process.on('SIGINT', async () => {
-  console.log("Shutting down gracefully...");
   await closeTransporter(); // Ensure transporter is closed before shutdown
   process.exit(0); // Exit successfully after cleanup
 });
 
 process.on('SIGTERM', async () => {
-  console.log("Shutting down gracefully...");
   await closeTransporter();
   process.exit(0);
 });

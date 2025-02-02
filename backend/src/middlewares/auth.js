@@ -1,7 +1,7 @@
 import { User } from "../models/user.js";
 import { userDTO } from "../dto/user.js";
 import { JWTService } from "../utils/JWTService.js";
-import { Car } from "../models/car.js";
+//import { Car } from "../models/car.js";
 
 /*************  ✨ Codeium Command ⭐  *************/
 /**

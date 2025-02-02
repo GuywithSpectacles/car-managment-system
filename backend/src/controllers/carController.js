@@ -28,8 +28,10 @@ export const carController = {
             options.sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
         }
 
+        const query = { owner: req.user._id };
+
         // Fetch cars with populated category field
-        const result = await paginationService.paginate({}, options);
+        const result = await paginationService.paginate(query, options);
 
         // Populate the category field with only the "name" field
         const populatedCars = await Car.find({ _id: { $in: result.data.map(car => car._id) } })
@@ -223,52 +225,54 @@ export const carController = {
     try {
       car = await Car.findOne({
         _id: carId,
+        owner: req.user._id,
+
       });
     } catch (error) {
       return next(error);
     }
 
-    if (req.file) {
-        let newImagePath;
-        try {
-            // Delete old image if it exists
-            if (car.image && car.image !== "no-photo.jpg") {
-                const oldImagePath = path.join("storage", path.basename(car.image));
-                if (fs.existsSync(oldImagePath)) {
-                    fs.unlinkSync(oldImagePath);
-                }
-            }
+    if (req.files) {
+      let newImagePath;
+      try {
+          // Delete old image if it exists
+          if (car.image && car.image !== "no-photo.jpg") {
+              const oldImagePath = path.join("storage", path.basename(car.image));
+              if (fs.existsSync(oldImagePath)) {
+                  fs.unlinkSync(oldImagePath);
+              }
+          }
+          const fileobj = req.files.image[0];
+          // Generate new filename with car owner's ID
+          const fileExtension = path.extname(fileobj.originalname);
+          const newFileName = `${Date.now()}-${car.owner}${fileExtension}`;
+          const newFilePath = path.join("storage", newFileName);
 
-            // Generate new filename with car owner's ID
-            const fileExtension = path.extname(req.file.originalname);
-            const newFileName = `${Date.now()}-${car.owner}${fileExtension}`;
-            const newFilePath = path.join("storage", newFileName);
+          // Save the new file from memory to disk
+          fs.writeFileSync(newFilePath, fileobj.buffer);
+          
+          // Set new image path
+          newImagePath = `${BACKEND_SERVER_PATH}/storage/${newFileName}`;
+      } catch (error) {
+          return next(error);
+      }
 
-            // Save the new file from memory to disk
-            fs.writeFileSync(newFilePath, req.file.buffer);
-            
-            // Set new image path
-            newImagePath = `${BACKEND_SERVER_PATH}/storage/${newFileName}`;
-        } catch (error) {
-            return next(error);
-        }
-
-      await Car.updateOne(
-        {
-          _id: carId,
-        },
-        {
-          category: categoryId,
-          model,
-          make,
-          year,
-          color,
-          registrationNo,
-          description,
-          image: newImagePath,
-        }
-      );
-    } else {
+    await Car.updateOne(
+      {
+        _id: carId,
+      },
+      {
+        category: categoryId,
+        model,
+        make,
+        year,
+        color,
+        registrationNo,
+        description,
+        image: newImagePath,
+      }
+    );
+  } else {
       await Car.updateOne(
         {
           _id: carId,
