@@ -5,7 +5,6 @@ import Dashboard from "./pages/dashboard/dashboard";
 import styles from "./App.module.css";
 import Error from "./pages/error/error";
 import Login from "./pages/login/login";
-import { useSelector } from "react-redux";
 import Signup from "./pages/signup/signup";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -14,7 +13,6 @@ import Cars from "./pages/cars/cars";
 import Categories from "./pages/categories/categories";
 
 function App() {
-  const isAuth = useSelector((state) => state.user.auth);
   return (
     <div className={styles.container}>
       <BrowserRouter>
