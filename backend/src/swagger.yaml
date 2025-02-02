@@ -1,0 +1,633 @@
+openapi: 3.0.0
+info:
+  title: Car Management API
+  description: API for managing cars, categories, and user authentication.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local development server
+tags:
+  - name: Auth
+    description: User authentication and authorization
+  - name: Categories
+    description: Operations related to categories
+  - name: Cars
+    description: Operations related to cars
+paths:
+  /register:
+    post:
+      tags:
+        - Auth
+      summary: Register a new user
+      description: Register a new user and send a generated password via email.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: John Doe
+                email:
+                  type: string
+                  format: email
+                  example: john.doe@example.com
+              required:
+                - name
+                - email
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/UserDTO'
+                  email:
+                    type: string
+                    example: Sent successfully
+                  auth:
+                    type: boolean
+                    example: true
+        '400':
+          description: Invalid input
+        '409':
+          description: Email already in use
+        '500':
+          description: Internal server error
+
+  /login:
+    post:
+      tags:
+        - Auth
+      summary: User login
+      description: Authenticate a user and return JWT tokens.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: john.doe@example.com
+                password:
+                  type: string
+                  example: password123
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/UserDTO'
+                  auth:
+                    type: boolean
+                    example: true
+        '400':
+          description: Invalid input
+        '401':
+          description: Invalid credentials
+        '500':
+          description: Internal server error
+
+  /logout:
+    post:
+      tags:
+        - Auth
+      summary: User logout
+      description: Log out a user and clear JWT tokens.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: null
+                  auth:
+                    type: boolean
+                    example: false
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /refreshJWT:
+    get:
+      tags:
+        - Auth
+      summary: Refresh JWT token
+      description: Refresh the access token using the refresh token.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/UserDTO'
+                  auth:
+                    type: boolean
+                    example: true
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /get-all-categories:
+    get:
+      tags:
+        - Categories
+      summary: Get all categories
+      description: Retrieve a list of all categories.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  categories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CategoryDTO'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /create-category:
+    post:
+      tags:
+        - Categories
+      summary: Create a new category
+      description: Create a new category.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Sedan
+              required:
+                - name
+      responses:
+        '201':
+          description: Category created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  category:
+                    $ref: '#/components/schemas/CategoryDTO'
+        '400':
+          description: Invalid input
+        '409':
+          description: Category already exists
+        '500':
+          description: Internal server error
+
+  /update-category:
+    put:
+      tags:
+        - Categories
+      summary: Update a category
+      description: Update an existing category.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                categoryId:
+                  type: string
+                  example: 64f1b2c3e4b0a1b2c3d4e5f6
+                name:
+                  type: string
+                  example: SUV
+              required:
+                - categoryId
+                - name
+      responses:
+        '200':
+          description: Category updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  category:
+                    type: string
+                    example: category updated!
+        '400':
+          description: Invalid input
+        '404':
+          description: Category not found
+        '500':
+          description: Internal server error
+
+  /delete-category/{id}:
+    delete:
+      tags:
+        - Categories
+      summary: Delete a category
+      description: Delete a category by its ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the category to delete
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Category deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  category:
+                    type: string
+                    example: category deleted!
+        '400':
+          description: Invalid input
+        '404':
+          description: Category not found
+        '500':
+          description: Internal server error
+
+  /create-car:
+    post:
+      tags:
+        - Cars
+      summary: Create a new car
+      description: Create a new car associated with the logged-in user.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                categoryId:
+                  type: string
+                  example: 64f1b2c3e4b0a1b2c3d4e5f6
+                model:
+                  type: string
+                  example: Model S
+                make:
+                  type: string
+                  example: Tesla
+                year:
+                  type: integer
+                  example: 2022
+                color:
+                  type: string
+                  example: Red
+                registrationNo:
+                  type: string
+                  example: ABC-123
+                ownerId:
+                  type: string
+                  example: 64f1b2c3e4b0a1b2c3d4e5f7
+                description:
+                  type: string
+                  example: A high-performance electric car.
+                image:
+                  type: string
+                  format: binary
+              required:
+                - categoryId
+                - model
+                - make
+                - year
+                - color
+                - registrationNo
+                - ownerId
+                - description
+      responses:
+        '201':
+          description: Car created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  car:
+                    $ref: '#/components/schemas/CarDTO'
+        '400':
+          description: Invalid input
+        '500':
+          description: Internal server error
+
+  /get-all-cars:
+    get:
+      tags:
+        - Cars
+      summary: Get all cars
+      description: Retrieve a paginated list of cars associated with the logged-in user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: Number of items per page
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: sortBy
+          in: query
+          description: Sort by field (e.g., `make:asc` or `year:desc`)
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of cars
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    example: 100
+                  cars:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CarDTO'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /get-car/{id}:
+    get:
+      tags:
+        - Cars
+      summary: Get a car by ID
+      description: Retrieve a car by its ID, only if it belongs to the logged-in user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the car to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Car details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarDetailsDTO'
+        '404':
+          description: Car not found
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /update-car:
+    put:
+      tags:
+        - Cars
+      summary: Update a car
+      description: Update a car by its ID, only if it belongs to the logged-in user.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                carId:
+                  type: string
+                  example: 64f1b2c3e4b0a1b2c3d4e5f6
+                categoryId:
+                  type: string
+                  example: 64f1b2c3e4b0a1b2c3d4e5f6
+                model:
+                  type: string
+                  example: Model S
+                make:
+                  type: string
+                  example: Tesla
+                year:
+                  type: integer
+                  example: 2022
+                color:
+                  type: string
+                  example: Red
+                registrationNo:
+                  type: string
+                  example: ABC-123
+                description:
+                  type: string
+                  example: A high-performance electric car.
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Car updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Car updated!
+        '400':
+          description: Invalid input
+        '404':
+          description: Car not found
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /delete-car/{id}:
+    delete:
+      tags:
+        - Cars
+      summary: Delete a car
+      description: Delete a car by its ID, only if it belongs to the logged-in user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the car to delete
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Car deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Car deleted!
+        '404':
+          description: Car not found
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    UserDTO:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 64f1b2c3e4b0a1b2c3d4e5f7
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          format: email
+          example: john.doe@example.com
+
+    CategoryDTO:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 64f1b2c3e4b0a1b2c3d4e5f6
+        name:
+          type: string
+          example: Sedan
+
+    CarDTO:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 64f1b2c3e4b0a1b2c3d4e5f6
+        category:
+          type: string
+          example: Sedan
+        model:
+          type: string
+          example: Model S
+        make:
+          type: string
+          example: Tesla
+        year:
+          type: integer
+          example: 2022
+        color:
+          type: string
+          example: Red
+        image:
+          type: string
+          example: http://localhost:3000/storage/12345.jpg
+        registrationNo:
+          type: string
+          example: ABC-123
+        description:
+          type: string
+          example: A high-performance electric car.
+
+    CarDetailsDTO:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 64f1b2c3e4b0a1b2c3d4e5f6
+        make:
+          type: string
+          example: Tesla
+        model:
+          type: string
+          example: Model S
+        color:
+          type: string
+          example: Red
+        registrationNo:
+          type: string
+          example: ABC-123
+        image:
+          type: string
+          example: http://localhost:3000/storage/12345.jpg
+        year:
+          type: integer
+          example: 2022
+        description:
+          type: string
+          example: A high-performance electric car.
+        createdAt:
+          type: string
+          format: date-time
+          example: 2023-09-01T12:00:00Z
+        categoryId:
+          type: string
+          example: 64f1b2c3e4b0a1b2c3d4e5f6
+        ownerName:
+          type: string
+          example: John Doe
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

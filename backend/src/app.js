@@ -9,11 +9,13 @@ import helmet from "helmet"
 import { fileURLToPath } from "url"
 import path from "path"
 import cors from "cors"
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs"; 
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-
+const swaggerDocument = YAML.load(path.join(__dirname, "swagger.yaml"));
 
 const corsOptions = {
   origin: ["http://localhost:3000"],
@@ -55,15 +57,7 @@ app.use("/storage", (req, res, next) => {
 
 app.use("/storage", express.static(storagePath))
 
-// Define __dirname
-// const __filename = fileURLToPath(import.meta.url)
-// const __dirname = path.dirname(__filename)
-
-// app.use("/storage", (req, res, next) => {
-// 	const filePath = path.join(__dirname, "storage", req.url);
-// 	console.log("Serving file:", filePath);
-// 	next();
-//   }, express.static(path.join(__dirname, "storage")));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   
 
 app.use(router)
