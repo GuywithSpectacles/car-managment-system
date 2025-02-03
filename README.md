@@ -23,7 +23,7 @@ This is a MERN stack application for managing cars and categories, featuring aut
     4. Configure environment variables:
       - `backend/.env`: Add DB_URI, JWT_SECRET, and SMTP details.
       - `frontend/.env`: Add API base URL.
-    5. Start the application: cd backend npm start cd ../frontend npm start
+    5. Start the application: cd backend npm run start cd ../frontend npm run start
 
 # API Documentation
   ### Endpoints
